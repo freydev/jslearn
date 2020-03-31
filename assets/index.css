@@ -4,5 +4,58 @@ html, body {
 }
 
 .container {
-    
+    margin: 20px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    max-width: 800px;
+}
+
+.top-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.deck > svg:nth-child(2) {
+    left: 4px;
+    top: 4px;
+    position: absolute;
+}
+
+.deck > svg:nth-child(3) {
+    left: 8px;
+    top: 8px;
+    position: absolute;
+}
+
+.top-card {
+    display: flex;
+    margin-left: 12px;
+}
+
+.cols {
+    display: flex;
+    margin-top: 30px;
+    justify-content: space-between;
+}
+
+.cols > .col {
+    display: flex;
+    flex-direction: column;
+}
+
+.cols > .col > svg:not(:first-child) {
+    margin-top: -120px;
+    box-shadow: 0 -10px 20px -15px rgba(0, 0, 0, 0.8);
+}
+
+.ace-boxes {
+    display: flex;
+    margin-left: auto;
+    justify-content: space-between;
+    width: calc(103px * 4 + 40px)
+}
+
+.ace-boxes .ace.empty {
+    opacity: .5;
 }

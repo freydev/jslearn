@@ -1,16 +1,43 @@
 <html>
    <head>
       <title>Пасьянс</title>
-      <link rel="stylesheet" href="./assets/cards.css" />
       <link rel="stylesheet" href="./assets/index.css" />
    </head>
    <body>
       <div class="container">
-         <div class="deck">
-            <svg>
-               <use xlink:href="svg-cards-indented.svg#back" fill="blue" />
-            </svg>
+         <div class="top-section">
+            <div class="deck">
+               <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="blue" /></svg>
+               <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="blue" /></svg>
+               <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="blue" /></svg>
+            </div>
+            <div class="top-card">
+               <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#heart_10" fill="blue" /></svg>
+            </div>
+            <div class="ace-boxes">
+               <div class="ace empty">
+                  <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="gray" /></svg>
+               </div>
+               <div class="ace empty">
+                  <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="gray" /></svg>
+               </div>
+               <div class="ace empty">
+                  <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="gray" /></svg>
+               </div>
+               <div class="ace empty">
+                  <svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="gray" /></svg>
+               </div>
+            </div>
          </div>
+         <div class="cols">
+            <div class="col" id="col1"></div>
+            <div class="col" id="col2"></div>
+            <div class="col" id="col3"></div>
+            <div class="col" id="col4"></div>
+            <div class="col" id="col5"></div>
+            <div class="col" id="col6"></div>
+            <div class="col" id="col7"></div>
+         </div>   
       </div>
       <script src="./index.js"></script>
    </body>
