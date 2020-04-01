@@ -49,8 +49,7 @@ class Cols {
     const { element, cards } = this;
 
     cards.forEach((card, index) => {
-      console.log(index, cards.length - 1)
-      if (index < cards.length - 1) card.render(element, true)
+      card.render(element, index < cards.length - 1)
     })
   }
 }
