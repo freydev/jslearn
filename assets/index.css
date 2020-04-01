@@ -11,6 +11,12 @@ html, body {
     max-width: 800px;
 }
 
+svg {
+    user-select: none;
+    position: relative;
+    transition: all .4s ease-out;
+}
+
 .top-section {
     display: flex;
     justify-content: space-between;
@@ -58,4 +64,14 @@ html, body {
 
 .ace-boxes .ace.empty {
     opacity: .5;
+}
+
+.opacity {
+    opacity: .5;
+}
+
+.no-position {
+    left: 0 !important;
+    top: 0 !important;
+    opacity: 1 !important;
 }
