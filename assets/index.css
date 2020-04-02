@@ -14,7 +14,7 @@ html, body {
 svg {
     user-select: none;
     position: relative;
-    transition: all .4s ease-out;
+    transition: left .4s ease-out, top .4s ease-out, opacity .4s ease-out;
 }
 
 .top-section {
@@ -37,6 +37,11 @@ svg {
 .top-card {
     display: flex;
     margin-left: 12px;
+    position: relative;
+}
+
+.top-card svg { 
+    position: absolute;
 }
 
 .cols {
@@ -74,4 +79,9 @@ svg {
     left: 0 !important;
     top: 0 !important;
     opacity: 1 !important;
+}
+
+.active {
+    box-shadow: 0 0 0 5px white !important;
+    transition-delay: 0s !important;
 }

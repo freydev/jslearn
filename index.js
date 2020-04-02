@@ -4,7 +4,7 @@ const values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '
 const SUIT_COLORS = {
   'heart': 'red',
   'diamond': 'red',
-  'space': 'black',
+  'spade': 'black',
   'club': 'black'
 }
 
@@ -15,29 +15,40 @@ const ANIMATION_ORDER = {
   '63': 3,
   '64': 4,
   '65': 5,
-  '66': 6,
-  '50': 7,
-  '51': 8,
-  '52': 9,
-  '53': 10,
-  '54': 11,
-  '55': 12,
-  '40': 13,
-  '41': 14,
-  '42': 15,
-  '43': 16,
-  '44': 17,
-  '30': 18,
-  '31': 19,
-  '32': 20,
-  '33': 21,
-  '20': 22,
-  '21': 23,
-  '22': 24,
-  '10': 25,
-  '11': 26,
-  '00': 27,
+  '66': 22,
+  '50': 6,
+  '51': 7,
+  '52': 8,
+  '53': 9,
+  '54': 10,
+  '55': 23,
+  '40': 11,
+  '41': 12,
+  '42': 13,
+  '43': 14,
+  '44': 24,
+  '30': 15,
+  '31': 16,
+  '32': 17,
+  '33': 25,
+  '20': 18,
+  '21': 19,
+  '22': 26,
+  '10': 20,
+  '11': 27,
+  '00': 21,
 }
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+let currentCard;
+let allCards;
+let cols;
 
 class Deck {
   constructor(element, topCardContainer) {
@@ -74,10 +85,12 @@ class Deck {
       (cards.length >= 16 ? `<svg viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="blue" /></svg>` : '') +
       (cards.length === 0 ? `<svg class="opacity" viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#back" fill="gray" /></svg>` : '')
 
-    topCardContainer.innerHTML = ''
-    const [ topCard ] = topCards.slice(-1)
-    if (topCard)
-      topCard.render(topCardContainer)
+    const topCard = topCards.slice(-1)
+    if (topCard.length) {
+      topCard.forEach(card => 
+        card.render(topCardContainer, false, element)
+      )
+    }
   }
 
   pop() {
@@ -90,6 +103,42 @@ class Card {
     this.suit = suit;
     this.color = SUIT_COLORS[suit];
     this.value = value;
+    this.closed = false;
+    this.col = null;
+    this.cardElement = null;
+    this.id = uuidv4()
+
+    document.addEventListener('click', event => {
+      const targetCardElement = event.target.parentElement
+      if (targetCardElement == this.cardElement) {
+
+        if (targetCardElement == currentCard) {
+          currentCard.cardElement.classList.remove('active')
+          currentCard = null
+          return
+        }
+
+        if (!this.closed) {
+          if (currentCard) {
+            if (
+              this.color != currentCard.color &&
+              (parseInt(currentCard.value) + 1) == this.value
+            ) {
+              currentCard.col.delCard(1)
+              const newCol = cols[event.target.closest('.col').getAttribute('id').replace('col', '') - 1]
+              newCol.addCard(currentCard)
+              newCol.render(true)
+            }
+            currentCard.cardElement.classList.remove('active')
+          }
+
+          setTimeout(() => {
+            currentCard = this
+            currentCard.cardElement.classList.add('active')
+          })
+        }
+      }
+    })
   }
 
   get cardName() { 
@@ -103,6 +152,8 @@ class Card {
   } 
   
   render(element, closed, startElement, colIndex, cardIndex) {
+    this.closed = closed
+
     const { cardName } = this;
     let startPosition = {};
     let delay = 0;
@@ -117,11 +168,14 @@ class Card {
     }
 
     element.innerHTML += 
-      `<svg ` +
+      `<svg id="${this.id}"` +
         `style="left: ${startPosition.left}px; top: ${startPosition.top}px; opacity: ${startElement ? 0 : 1}; transition-delay: ${delay}s"` + 
         `viewBox="0 0 169.075 244.640" width="103" height="150"><use xlink:href="svg-cards-indented.svg#` +
         `${closed ? 'back' : cardName}` +
       `" />`
+
+    
+    this.cardElement = [].slice.call(element.querySelectorAll('svg'), -1).pop()
 
     setTimeout(() => {
       element.querySelectorAll('svg').forEach(el => el.classList.add('no-position'))
@@ -137,14 +191,24 @@ class Cols {
   }
 
   addCard(card) {
+    card.col = this
     this.cards.push(card);
   }
 
-  render() {
+  delCard(len) {
+    this.cards.splice(-len)
+    this.render()
+  }
+
+  render(dontChangeClosing) {
     const { element, cards, index: colIndex } = this;
+    element.innerHTML = ''
 
     cards.forEach((card, index) => {
-      card.render(element, index < cards.length - 1, document.querySelector('.deck'), colIndex, index)
+
+      card.render(element, 
+        !dontChangeClosing ? index < cards.length - 1 : card.closed, 
+        document.querySelector('.deck'), colIndex, index)
     })
   }
 }
@@ -152,6 +216,8 @@ class Cols {
 const cards = 
       [].concat.apply([],
                       suits.map(suit => values.map(value => new Card(suit, value))))
+
+allCards = cards.slice(0)
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -172,6 +238,8 @@ const col_4 = new Cols('col4', 3)
 const col_5 = new Cols('col5', 4)
 const col_6 = new Cols('col6', 5)
 const col_7 = new Cols('col7', 6)
+
+cols = [col_1, col_2, col_3, col_4, col_5, col_6, col_7]
 
 for (let index = 0; index < 28; index++) {
   const card = deck.pop();
